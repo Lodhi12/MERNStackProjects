@@ -73,9 +73,7 @@ const Appointment = () => {
       setDocSlots((prev) => [...prev, timeSlots]);
     }
   };
-  useEffect(() => {
-    console.log(docSlots);
-  }, [docSlots]);
+  useEffect(() => {}, [docSlots]);
   useEffect(() => {
     getAvailableSlots();
   }, [docInfo]);
@@ -86,10 +84,10 @@ const Appointment = () => {
     docInfo && (
       <div>
         {/* Doctor Details */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-3">
           <div>
             <img
-              className="bg-primary w-full sm:max-w-72 rounded-lg"
+              className="bg-indigo-500 w-full sm:max-w-72 rounded-lg"
               src={docInfo.image}
               alt=""
             />
@@ -136,7 +134,7 @@ const Appointment = () => {
                   onClick={() => setSlotIndex(index)}
                   className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
                     slotIndex === index
-                      ? "bg-primary text-white"
+                      ? "bg-indigo-500 text-white"
                       : "border border-gray-200"
                   }`}
                   key={index}
@@ -154,8 +152,8 @@ const Appointment = () => {
                   onClick={() => setSlotTime(item.time)}
                   className={`text-sm font-light shrink-0 px-5 py-2 rounded-full cursor-pointer ${
                     item.time === slotTime
-                      ? "bg-primary text-white"
-                      : "text-gray-400 border-gray-300"
+                      ? "bg-indigo-500 text-white"
+                      : "text-gray-400 border border-gray-300"
                   }`}
                   key={index}
                 >
@@ -163,7 +161,9 @@ const Appointment = () => {
                 </p>
               ))}
           </div>
-          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6"></button>
+          <button className="bg-indigo-500 text-white text-sm font-light px-14 py-3 rounded-full my-6">
+            Book an appointment
+          </button>
         </div>
         {/* Listing Related Doctors */}
         <RelatedDoctors docId={docId} speciality={docInfo.speciality} />

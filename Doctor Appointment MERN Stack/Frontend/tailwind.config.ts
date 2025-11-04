@@ -1,4 +1,5 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from "tailwindcss";
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -7,9 +8,9 @@ export default {
         primary: "#5F6FFF",
       },
       gridTemplateColumns: {
-        "auto": "repeat(auto-fill, minmax(200px, 1fr))"
-      }
+        auto: "repeat(auto-fill, minmax(200px, 1fr))",
+      },
     },
   },
   plugins: [],
-};
+} satisfies Config;
