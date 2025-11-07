@@ -6,7 +6,7 @@ const DoctorsList = () => {
   if (!adminContext) {
     throw new Error("Nothing in context");
   }
-  const { doctors, aToken, getAllDoctors } = adminContext;
+  const { doctors, aToken, getAllDoctors, changeAvailability } = adminContext;
 
   useEffect(() => {
     if (aToken) {
@@ -33,7 +33,11 @@ const DoctorsList = () => {
               </p>
               <p className="text-zinc-600 text-sm">{item.speciality}</p>
               <div className="mt-2 flex items-center gap-1 text-sm">
-                <input type="checkbox" checked={item.available} />
+                <input
+                  onChange={() => changeAvailability(item._id)}
+                  type="checkbox"
+                  checked={item.available}
+                />
                 <p>Available</p>
               </div>
             </div>
