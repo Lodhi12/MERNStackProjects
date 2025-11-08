@@ -16,11 +16,39 @@ export interface DoctorType {
   about: string;
   fees: number;
   address: AddressType;
+  available: boolean;
+  slots_booked: Object;
 }
 
 export interface AddressType {
   line1: string;
   line2: string;
+}
+
+interface UserDataType {
+  name: string;
+  image: string;
+  email: string;
+  phone: string;
+  address: AddressType;
+  gender: string;
+  dob: string;
+}
+
+interface AppointmentType {
+  amount: number;
+  cancelled: boolean;
+  date: Date;
+  docData: DoctorType;
+  docId: string;
+  isCompleted: boolean;
+  payment: boolean;
+  slotDate: string;
+  slotTime: string;
+  userData: UserDataType;
+  userId: string;
+  __V: number;
+  _id: string;
 }
 
 interface AdminContextProviderType {
@@ -29,20 +57,26 @@ interface AdminContextProviderType {
   backendUrl: string;
   doctors: DoctorType[];
   getAllDoctors: () => void;
-  changeAvailability: () => void;
+  changeAvailability: (docId: string) => void;
+  appointments: AppointmentType[];
+  setAppointments: React.Dispatch<React.SetStateAction<AppointmentType[]>>;
+  getAllAppointments: () => void;
+  cancelAppointment: (appointmentId: string) => void;
+  getDashData: () => void;
 }
 export const AdminContext = createContext<AdminContextProviderType | undefined>(
   undefined
 );
 
 const AdminContextProvider = ({ children }: AdminContextProviderProps) => {
-  const [aToken, setAToken] = useState(
+  const [aToken, setAToken] = useState<string | null>(
     localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
   );
 
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
-
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [appointments, setAppointments] = useState<AppointmentType[]>([]);
+  const [dashData, setDashData] = useState([]);
+  const backendUrl: string = import.meta.env.VITE_BACKEND_URL;
 
   const getAllDoctors = async () => {
     try {
@@ -73,11 +107,59 @@ const AdminContextProvider = ({ children }: AdminContextProviderProps) => {
       if (data.success) {
         toast.success(data.message);
         getAllDoctors();
-      } else [toast.error(data.message)];
+      } else toast.error(data.message);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       }
+    }
+  };
+
+  const getAllAppointments = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/appointments", {
+        headers: { aToken },
+      });
+      if (data.success) {
+        setAppointments(data.appointments);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    }
+  };
+
+  const cancelAppointment = async (appointmentId: string) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/cancel-appointment",
+        { appointmentId },
+        { headers: { aToken } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getAllAppointments();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    }
+  };
+
+  const getDashData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/dashboard", {
+        headers: { aToken },
+      });
+      if (data.success) {
+        setDashData(data.dashData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
     }
   };
   const value = {
@@ -87,6 +169,13 @@ const AdminContextProvider = ({ children }: AdminContextProviderProps) => {
     doctors,
     getAllDoctors,
     changeAvailability,
+    getAllAppointments,
+    appointments,
+    setAppointments,
+    cancelAppointment,
+    dashData,
+    setDashData,
+    getDashData,
   };
 
   return (
