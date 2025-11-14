@@ -51,6 +51,13 @@ interface AppointmentType {
   _id: string;
 }
 
+interface DashDataType {
+  appointments: number;
+  doctors: number;
+  latestAppointments: AppointmentType[];
+  patients: number;
+}
+
 interface AdminContextProviderType {
   aToken: string | null;
   setAToken: React.Dispatch<React.SetStateAction<string | null>>;
@@ -63,6 +70,8 @@ interface AdminContextProviderType {
   getAllAppointments: () => void;
   cancelAppointment: (appointmentId: string) => void;
   getDashData: () => void;
+  dashData: DashDataType | null;
+  setDashData: React.Dispatch<React.SetStateAction<DashDataType | null>>;
 }
 export const AdminContext = createContext<AdminContextProviderType | undefined>(
   undefined
@@ -75,7 +84,7 @@ const AdminContextProvider = ({ children }: AdminContextProviderProps) => {
 
   const [doctors, setDoctors] = useState<DoctorType[]>([]);
   const [appointments, setAppointments] = useState<AppointmentType[]>([]);
-  const [dashData, setDashData] = useState([]);
+  const [dashData, setDashData] = useState<DashDataType | null>(null);
   const backendUrl: string = import.meta.env.VITE_BACKEND_URL;
 
   const getAllDoctors = async () => {

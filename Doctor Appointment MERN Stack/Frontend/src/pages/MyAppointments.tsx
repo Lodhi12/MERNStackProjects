@@ -2,6 +2,38 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import type { DoctorType } from "../assets/assets";
+
+interface AppointmentType {
+  amount: number;
+  cancelled: boolean;
+  date: Date;
+  docData: DoctorType;
+  docId: string;
+  isCompleted: boolean;
+  payment: boolean;
+  slotDate: string;
+  slotTime: string;
+  userData: UserDataType;
+  userId: string;
+  __V: number;
+  _id: string;
+}
+
+interface UserDataType {
+  name: string;
+  image: string;
+  email: string;
+  phone: string;
+  address: AddressType;
+  gender: string;
+  dob: string;
+}
+
+export interface AddressType {
+  line1: string;
+  line2: string;
+}
 
 const MyAppointments = () => {
   const appContext = useContext(AppContext);
@@ -10,7 +42,7 @@ const MyAppointments = () => {
     throw new Error("Nothing in context");
   }
   const { backendUrl, token, getDoctorsData } = appContext;
-  const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState<AppointmentType[]>([]);
   const months = [
     "",
     "Jan",
@@ -105,12 +137,12 @@ const MyAppointments = () => {
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
-              {!item.cancelled && (
+              {!item.cancelled && !item.payment && !item.isCompleted && (
                 <button className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300">
                   Pay Online
                 </button>
               )}
-              {!item.cancelled && (
+              {!item.cancelled && !item.isCompleted && (
                 <button
                   onClick={() => cancelAppointment(item._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-red-600 hover:text-white transition-all duration-300"
@@ -118,9 +150,14 @@ const MyAppointments = () => {
                   Cancel Appointment
                 </button>
               )}
-              {item.cancelled && (
+              {item.cancelled && !item.isCompleted && (
                 <button className="sm:min-w-48 py-2 border">
                   Appointment cancelled
+                </button>
+              )}
+              {item.isCompleted && (
+                <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">
+                  Completed
                 </button>
               )}
             </div>

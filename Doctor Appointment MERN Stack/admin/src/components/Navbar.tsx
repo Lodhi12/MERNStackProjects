@@ -2,14 +2,21 @@ import { useContext } from "react";
 import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import { useNavigate } from "react-router-dom";
+import { DoctorContext } from "../context/DoctorContext";
 
 const Navbar = () => {
   const adminContext = useContext(AdminContext);
+  const doctorContext = useContext(DoctorContext);
+
   if (!adminContext) {
+    throw new Error("Nothing in context");
+  }
+  if (!doctorContext) {
     throw new Error("Nothing in context");
   }
 
   const { aToken, setAToken } = adminContext;
+  const { dToken, setDToken } = doctorContext;
 
   const navigate = useNavigate();
 
@@ -17,6 +24,8 @@ const Navbar = () => {
     navigate("/");
     aToken && setAToken("");
     aToken && localStorage.removeItem("aToken");
+    dToken && setDToken("");
+    dToken && localStorage.removeItem("dToken");
   };
   return (
     <div className="flex justify-between items-center px-4 sm:px-10 py-3 border-b bg-white">
@@ -30,7 +39,10 @@ const Navbar = () => {
           {aToken ? "Admin" : "Doctor"}
         </p>
       </div>
-      <button className="bg-primary text-white text-sm px-10 py-2 rounded-full">
+      <button
+        onClick={logout}
+        className="bg-primary text-white text-sm px-10 py-2 rounded-full"
+      >
         Logout
       </button>
     </div>

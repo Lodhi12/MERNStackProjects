@@ -44,6 +44,7 @@ export interface DoctorType {
   speciality: string;
   degree: string;
   experience: string;
+  available?: boolean;
   about: string;
   fees: number;
   address: AddressType;

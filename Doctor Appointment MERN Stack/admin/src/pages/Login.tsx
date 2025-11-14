@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { DoctorContext } from "../context/DoctorContext";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
@@ -10,9 +11,14 @@ const Login = () => {
 
   const adminContext = useContext(AdminContext);
   if (!adminContext) {
-    throw new Error("Nothing in context");
+    throw new Error("Nothing in admin context");
+  }
+  const doctorContext = useContext(DoctorContext);
+  if (!doctorContext) {
+    throw new Error("Nothing in doctor context");
   }
   const { setAToken, backendUrl } = adminContext;
+  const { setDToken } = doctorContext;
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,8 +36,20 @@ const Login = () => {
           toast.error(data.message);
         }
       } else {
+        const { data } = await axios.post(backendUrl + "/api/doctor/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("dToken", data.token);
+          setDToken(data.token);
+        } else {
+          toast.error(data.message);
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    }
   };
   //   "primary": "#5F6FFF"
   return (
