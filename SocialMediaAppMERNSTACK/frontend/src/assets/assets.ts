@@ -3,7 +3,7 @@ import sample_cover from "./sample_cover.jpg";
 import sample_profile from "./sample_profile.jpg";
 import bgImage from "./bgImage.png";
 import group_users from "./group_users.png";
-import { Home, MessageCircle, Search, UserIcon, Users } from "lucide-react";
+import { Home, MessageCircle, Search, UserIcon, Users, type LucideProps } from "lucide-react";
 import sponsored_img from "./sponsored_img.png";
 
 export const assets = {
@@ -33,6 +33,33 @@ export interface UserDataType {
   updatedAt: string;
 }
 
+export interface PostsDataType {
+  _id: string;
+  user: UserDataType;
+  content: string;
+  image_urls: string[];
+  post_type: string;
+  likes_count: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MenuItemsType {
+  to: string;
+  label: string;
+  Icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+}
+
+export interface StoriesDataType {
+  _id: string;
+  user: UserDataType;
+  content: string;
+  media_url: string;
+media_type: string;
+background_color: string;
+createdAt: string;
+updatedAt: string;
+}
 export const menuItemsData = [
   { to: "/", label: "Feed", Icon: Home },
   { to: "/messages", label: "Messages", Icon: MessageCircle },
@@ -77,7 +104,7 @@ const dummyUser3Data = {
     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&h=200&auto=format&fit=crop",
 };
 
-export const dummyStoriesData = [
+export const dummyStoriesData: StoriesDataType[] = [
   {
     _id: "68833d466e4b42b685068860",
     user: dummyUserData,
@@ -146,7 +173,7 @@ export const dummyStoriesData = [
   },
 ];
 
-export const dummyPostsData = [
+export const dummyPostsData:PostsDataType[] = [
   {
     _id: "68773e977db16954a783839c",
     user: dummyUserData,
