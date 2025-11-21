@@ -329,7 +329,7 @@ export const dummyMessagesData = [
   },
 ];
 
-export const dummyConnectionsData = [
+export const dummyConnectionsData:UserDataType[] = [
   dummyUserData,
   dummyUser2Data,
   dummyUser3Data,
